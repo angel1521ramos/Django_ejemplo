@@ -4,15 +4,12 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
 from django.contrib.auth import login, logout, authenticate
-
-# muestra el archivo home
+from .forms import TaskForm
+from .models import Task
 
 
 def home(request):
     return render(request, 'home.html')
-
-
-# muestra el archivo para loguearse
 
 
 def signup(request):
@@ -48,8 +45,29 @@ def signup(request):
         })
 
 
-def task(request):
-    return render(request, 'task.html')
+def view_task(request):
+    #tasks = Task.objects.all()
+    tasks = Task.objects.filter(usuario=request.user, fechaCompletada__isnull=True)
+    return render(request, 'task-crud/visualizar.html', {'tasks': tasks})
+
+
+def create_task(request):
+    if request.method == 'GET':
+        return render(request, 'task-crud/añadir.html', {
+            'form': TaskForm
+        })
+    else:
+        try:
+            form = TaskForm(request.POST)
+            new_task = form.save(commit=False)#aun no lo guardes 
+            new_task.usuario = request.user
+            new_task.save()
+            return redirect('task')
+        except ValueError:
+            return render(request, 'task-crud/añadir.html', {
+                'form': TaskForm,
+                'error': 'Por favor añade datos validos'
+            })
 
 
 def signout(request):

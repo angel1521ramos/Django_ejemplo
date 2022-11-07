@@ -1,0 +1,20 @@
+{% extends 'base.html' %} 
+{% block contenido %} 
+{{error}}
+<h1>añadir tarea</h1>
+<ul>
+  {% for x in tasks %}
+  <li>
+    {% if x.importante %}
+        <h1>{{x.titulo}}</h1>
+    {% else %}
+        <h3>{{x.titulo}}</h3>
+    {% endif %}
+    
+    <p>{{x.descripcion}}</p>
+    <p>{{x.usuario.username}}</p>
+  </li>
+  {% endfor %}
+</ul>
+
+{% endblock contenido %}

@@ -6,9 +6,9 @@ class Task(models.Model):
     titulo = models.CharField(max_length=100)
     descripcion = models.TextField(blank=True)
     creacion = models.DateTimeField(auto_now_add=True)
-    fechaCompletada = models.DateTimeField(null=True)
+    fechaCompletada = models.DateTimeField(null=True, blank=True)
     importante = models.BooleanField(default=False)
-    usuario = models.ForeignKey(User, on_delete=models.CASCADE) 
+    usuario = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.titulo
+        return self.titulo + '- realizado por ' + self.usuario.username
