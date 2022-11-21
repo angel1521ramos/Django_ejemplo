@@ -1,6 +1,6 @@
 from ast import If
 from django.db import IntegrityError
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
 from django.contrib.auth import login, logout, authenticate
@@ -47,7 +47,8 @@ def signup(request):
 
 def view_task(request):
     #tasks = Task.objects.all()
-    tasks = Task.objects.filter(usuario=request.user, fechaCompletada__isnull=True)
+    tasks = Task.objects.filter(
+        usuario=request.user, fechaCompletada__isnull=True)
     return render(request, 'task-crud/visualizar.html', {'tasks': tasks})
 
 
@@ -59,7 +60,7 @@ def create_task(request):
     else:
         try:
             form = TaskForm(request.POST)
-            new_task = form.save(commit=False)#aun no lo guardes 
+            new_task = form.save(commit=False)  # aun no lo guardes
             new_task.usuario = request.user
             new_task.save()
             return redirect('task')
@@ -68,6 +69,11 @@ def create_task(request):
                 'form': TaskForm,
                 'error': 'Por favor añade datos validos'
             })
+
+
+def detail_task(request, task_id):
+    task = get_object_or_404(Task, pk=task_id)
+    return render(request, 'task-crud/detalle.html', {'task': task})
 
 
 def signout(request):
