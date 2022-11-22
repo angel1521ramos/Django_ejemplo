@@ -1,5 +1,4 @@
-{% extends 'base.html' %} {% block contenido %} 
-{{error}}
+{% extends 'base.html' %} {% block contenido %} {{error}}
 <h1>añadir tarea</h1>
 <form action="{% url 'create_task' %}" method="POST">
   {% csrf_token %} {{form.as_p}}
